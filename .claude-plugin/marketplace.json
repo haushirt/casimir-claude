@@ -9,8 +9,8 @@
       "name": "c",
       "source": "./plugins/c",
       "displayName": "Casimirs Arbeitsweise",
-      "description": "Arbeitsregeln und Commands von Casimir: /c:plan, /c:nacht, /c:fix, /c:mockup, /c:zurueck, /c:neu",
-      "version": "1.0.1",
+      "description": "Arbeitsregeln und Commands von Casimir: /c:plan, /c:tag, /c:nacht, /c:fix, /c:mockup, /c:zurueck, /c:neu",
+      "version": "1.1.0",
       "author": {
         "name": "Casimir Ikrath"
       },

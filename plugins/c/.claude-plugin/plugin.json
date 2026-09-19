@@ -1,7 +1,7 @@
 {
   "name": "c",
   "description": "Arbeitsregeln und Commands von Casimir. Kurze Antworten, Deutsch, Vorschau vor jedem Start, Check vor fertig.",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": {
     "name": "Casimir Ikrath"
   },
