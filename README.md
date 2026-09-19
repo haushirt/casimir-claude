@@ -1,9 +1,33 @@
 # casimir-claude
 
-Casimirs Arbeits-Setup für Claude Code, als Plugin.
+Casimirs Arbeits-Setup für Claude Code.
 Ein Ort für alle Repos – Regeln, Befehle und der Check vor „fertig".
 
-## In einem Repo einschalten
+Es gibt zwei Wege, das in ein Repo zu bekommen. **Kopieren ist der empfohlene
+Weg**, weil das Plugin in den Cloud-Sessions nur geladen wird, wenn dieses Repo
+dort mit angehängt ist.
+
+## Weg 1 (empfohlen): Dateien ins Repo kopieren
+
+Der Ordner `.claude/` in diesem Repo ist die Vorlage. Sie wird unverändert in
+das Zielrepo kopiert:
+
+```bash
+TMP="$(mktemp -d)"
+git clone --depth 1 https://github.com/haushirt/casimir-claude "$TMP/cc"
+mkdir -p .claude
+cp -R "$TMP/cc/.claude/skills" "$TMP/cc/.claude/scripts" .claude/
+cp -n "$TMP/cc/.claude/settings.json" .claude/settings.json
+chmod +x .claude/scripts/*.sh
+rm -rf "$TMP"
+```
+
+Gibt es schon eine `.claude/settings.json`, nur den Schlüssel `hooks` daraus
+ergänzen. Danach eine **neue** Session starten.
+
+Kürzer geht es in der Session mit `/neu` – der Befehl macht genau das.
+
+## Weg 2: als Plugin
 
 `.claude/settings.json` im jeweiligen Repo:
 
@@ -18,25 +42,24 @@ Ein Ort für alle Repos – Regeln, Befehle und der Check vor „fertig".
 }
 ```
 
-Danach eine **neue** Session starten – Plugins werden beim Start geladen.
-
-Leeres Repo ohne diese Datei? Dann das Plugin im claude.ai-Konto aktivieren
-(Synced Plugin), dann ist es überall dabei. Oder in der Session einmal sagen:
-„Richte dieses Repo nach haushirt/casimir-claude ein."
+Die Befehle heißen dann `/c:plan`, `/c:tag` usw. **Achtung:** In einer
+Cloud-Session, an der nur das Zielrepo hängt, wird das Plugin nicht geladen –
+der Marketplace wird dort nicht geholt. Dann fehlen Befehle, Regeln und Hooks
+stillschweigend.
 
 ## Befehle
 
 | Befehl | Modell | Wofür |
 |---|---|---|
-| `/c:plan` | Opus | Projektstart oder größerer Schritt, gemeinsam |
-| `/c:tag` | Opus | Autonom durcharbeiten, Casimir ist erreichbar |
-| `/c:nacht` | Opus | Autonom durcharbeiten, ohne Casimir |
-| `/c:fix` | Sonnet | Kleine Änderung, max. 3 Dateien |
-| `/c:mockup` | – | Bild vor Code bei allem Optischen |
-| `/c:zurueck` | – | Letzte Änderung sicher zurücknehmen |
-| `/c:neu` | – | Neues Repo einrichten |
+| `/plan` | Opus | Projektstart oder größerer Schritt, gemeinsam |
+| `/tag` | Opus | Autonom durcharbeiten, Casimir ist erreichbar |
+| `/nacht` | Opus | Autonom durcharbeiten, ohne Casimir |
+| `/fix` | Sonnet | Kleine Änderung, max. 3 Dateien |
+| `/mockup` | – | Bild vor Code bei allem Optischen |
+| `/zurueck` | – | Letzte Änderung sicher zurücknehmen |
+| `/neu` | – | Neues Repo einrichten |
 
-`/c:mockup` springt auch von allein an, sobald das Wort „mockup" in einer
+`/mockup` springt auch von allein an, sobald das Wort „mockup" in einer
 Nachricht steht.
 
 ## Was automatisch läuft
@@ -54,12 +77,17 @@ Umgebungsvariablen der Cloud-Umgebung setzen.
 ## Aufbau
 
 ```
-.claude-plugin/marketplace.json   Katalog
-plugins/c/
-  .claude-plugin/plugin.json      Manifest
-  skills/<name>/SKILL.md          die Befehle
-  hooks/hooks.json                Sessionstart + Check vor fertig
+.claude/                          die Vorlage zum Kopieren (Weg 1)
+  settings.json                   Hooks: Sessionstart + Check vor fertig
+  skills/<name>/SKILL.md          die Befehle, ohne Namensraum
   scripts/regeln.sh               die Regeln R1–R7, automatisch beim Start
   scripts/fertig-check.sh         der Check
   scripts/mockup-shot.cjs         Bilder in 393x852 / 744x1133 / 1440x900
+
+.claude-plugin/marketplace.json   Katalog (Weg 2)
+plugins/c/                        dieselben Dateien als Plugin, Befehle /c:…
 ```
+
+Die beiden Bäume werden von Hand gleich gehalten. Wird etwas in `plugins/c/`
+geändert, gehört es auch nach `.claude/` – dort ohne `/c:`-Namensraum und mit
+`${CLAUDE_PROJECT_DIR}/.claude` statt `${CLAUDE_PLUGIN_ROOT}`.
