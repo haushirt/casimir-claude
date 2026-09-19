@@ -1,0 +1,25 @@
+{
+  "name": "casimir",
+  "description": "Casimirs Arbeits-Setup fuer Claude Code: Regeln, Befehle und der Check vor fertig.",
+  "owner": {
+    "name": "Casimir Ikrath"
+  },
+  "plugins": [
+    {
+      "name": "c",
+      "source": "./plugins/c",
+      "displayName": "Casimirs Arbeitsweise",
+      "description": "Arbeitsregeln und Commands von Casimir: /c:plan, /c:nacht, /c:fix, /c:mockup, /c:zurueck, /c:neu",
+      "version": "1.0.0",
+      "author": {
+        "name": "Casimir Ikrath"
+      },
+      "keywords": [
+        "workflow",
+        "deutsch",
+        "regeln"
+      ],
+      "category": "workflow"
+    }
+  ]
+}
